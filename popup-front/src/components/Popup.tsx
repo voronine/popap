@@ -146,6 +146,7 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           handleTabChange={handleTabChange}
           loading={loading}
         />
+        
         {loading ? (
           <LoadingContent />
         ) : (
@@ -154,11 +155,13 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               quickBuyPreset={formData.quickBuyPreset}
               handleQuickInputChange={handleQuickInputChange}
             />
+
             <PresetsSection
               presetsConfig={presetsConfig}
               formData={formData}
               handlePresetInputChange={handlePresetInputChange}
             />
+
             <AdditionalSettingsSection
               additionalSettingsConfig={additionalSettingsConfig}
               formData={formData}
@@ -166,6 +169,7 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             />
           </Content>
         )}
+
         <ButtonsSection
           onClose={onClose}
           handleSave={handleSave}
