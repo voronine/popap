@@ -5,7 +5,7 @@ import Tabs from '../Tabs/Tabs'
 
 const Title = styled.h2`
   margin: 0;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
 `
 
@@ -13,7 +13,8 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 2px;
+  margin-top: -4px;
 `
 
 export const TitleContainer = styled.div`

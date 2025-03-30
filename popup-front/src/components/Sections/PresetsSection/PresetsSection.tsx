@@ -6,7 +6,7 @@ const Section = styled.div`
   background: #0a0a0a;
   border-radius: 4px;
   padding: 4px 8px;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
 `
 
 const TitleContainer = styled.div`

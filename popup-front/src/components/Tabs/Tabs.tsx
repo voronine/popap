@@ -6,7 +6,7 @@ const TabsWrapper = styled.div`
   background: #222222;
   padding: 4px;
   border-radius: 4px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   box-sizing: border-box;
 `
 

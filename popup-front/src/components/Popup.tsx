@@ -30,7 +30,7 @@ const Container = styled.div`
   height: 80%;
   background: #111111;
   color: #c3c3c3;
-  padding: 4px 8px;
+  padding: 6px 8px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
