@@ -47,7 +47,7 @@ export interface AdditionalSettingsSectionProps {
   ) => void
 }
 
-const AdditionalSettingsSection: React.FC<AdditionalSettingsSectionProps> = ({
+const AdditionalSettingsSection: React.FC<AdditionalSettingsSectionProps> = React.memo(({
   additionalSettingsConfig,
   formData,
   handleAdditionalInputChange
@@ -74,6 +74,6 @@ const AdditionalSettingsSection: React.FC<AdditionalSettingsSectionProps> = ({
       ))}
     </>
   )
-}
+})
 
 export default AdditionalSettingsSection

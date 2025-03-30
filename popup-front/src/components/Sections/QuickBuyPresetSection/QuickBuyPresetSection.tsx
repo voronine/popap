@@ -41,7 +41,7 @@ interface QuickBuyPresetSectionProps {
   ) => void
 }
 
-const QuickBuyPresetSection: React.FC<QuickBuyPresetSectionProps> = ({
+const QuickBuyPresetSection: React.FC<QuickBuyPresetSectionProps> = React.memo(({
   quickBuyPreset,
   handleQuickInputChange
 }) => {
@@ -63,6 +63,6 @@ const QuickBuyPresetSection: React.FC<QuickBuyPresetSectionProps> = ({
       </RowSpaceBetween>
     </Section>
   )
-}
+})
 
 export default QuickBuyPresetSection

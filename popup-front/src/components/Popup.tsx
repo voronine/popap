@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { fetchSettings, saveSetting } from '../store/settingsSlice'
 import styled from 'styled-components'
@@ -63,42 +63,47 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     setFormData(currentPreset || {})
   }, [activeTab, settings])
 
-  const handleQuickInputChange = (
-    e: { target: { name?: string; value: string } }
-  ): void => {
-    if (e.target.name) {
+  const handleQuickInputChange = useCallback(
+    (e: { target: { name?: string; value: string } }): void => {
+      if (e.target.name) {
+        setFormData((prev) => ({
+          ...prev,
+          [e.target.name!]: e.target.value
+        }))
+      }
+    },
+    []
+  )
+  
+  const handleAdditionalInputChange = useCallback(
+    (e: { target: { name?: string; value: string } }): void => {
+      if (e.target.name) {
+        setFormData((prev) => ({
+          ...prev,
+          [e.target.name!]: e.target.value
+        }))
+      }
+    },
+    []
+  )
+  
+  const handlePresetInputChange = useCallback(
+    (
+      e: React.ChangeEvent<HTMLInputElement>,
+      index: number,
+      field: 'buyPresets' | 'sellPresets'
+    ): void => {
+      const presets = formData[field]
+        ? [...(formData[field] as string[])]
+        : []
+      presets[index] = e.target.value
       setFormData((prev) => ({
         ...prev,
-        [e.target.name!]: e.target.value
+        [field]: presets
       }))
-    }
-  }
-
-  const handleAdditionalInputChange = (
-    e: { target: { name?: string; value: string } }
-  ): void => {
-    if (e.target.name) {
-      setFormData((prev) => ({
-        ...prev,
-        [e.target.name!]: e.target.value
-      }))
-    }
-  }
-
-  const handlePresetInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number,
-    field: 'buyPresets' | 'sellPresets'
-  ): void => {
-    const presets = formData[field]
-      ? [...(formData[field] as string[])]
-      : []
-    presets[index] = e.target.value
-    setFormData((prev) => ({
-      ...prev,
-      [field]: presets
-    }))
-  }
+    },
+    [formData]
+  )
 
   const handleSave = async (): Promise<void> => {
     if (formData.presetName) {

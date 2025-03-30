@@ -48,7 +48,7 @@ export interface PresetsSectionProps {
   ) => void
 }
 
-const PresetsSection: React.FC<PresetsSectionProps> = ({
+const PresetsSection: React.FC<PresetsSectionProps> = React.memo(({
   presetsConfig,
   formData,
   handlePresetInputChange
@@ -82,6 +82,6 @@ const PresetsSection: React.FC<PresetsSectionProps> = ({
       ))}
     </>
   )
-}
+})
 
 export default PresetsSection
