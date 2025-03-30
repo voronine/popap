@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 
 const InputContainer = styled.div`
@@ -6,10 +6,7 @@ const InputContainer = styled.div`
   width: 100%;
 `
 
-export const StyledInput = styled.input.attrs({
-  inputMode: 'numeric',
-  pattern: '[0-9]*',
-})`
+export const StyledInput = styled.input`
   width: 100%;
   padding: 4px 8px;
   background: #1b1b1b;
@@ -41,49 +38,89 @@ const Indicator = styled.span`
 `
 
 interface CustomInputProps {
-  variant: 'preset' | 'additional' | 'quick'
+  variant?: 'preset' | 'additional' | 'quick'
   value: string
-  onChange: (
-    e: React.ChangeEvent<HTMLInputElement> | { target: { value: string } }
-  ) => void
+  onChange: (e: React.ChangeEvent<HTMLInputElement> | { target: { value: string } }) => void
   name?: string
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({ variant, value, onChange, name }) => {
-  const showIcon = variant === 'preset' ? value !== '' : true
+  const [localValue, setLocalValue] = useState(value)
+
+  useEffect(() => {
+    setLocalValue(value)
+  }, [value])
+
+  const showIcon = variant === 'preset' ? localValue !== '' : variant ? true : false
 
   let iconContent: string | null = null
   let clickable = false
 
   if (variant === 'quick') {
     iconContent = '$'
-    clickable = false
   } else if (variant === 'preset') {
     iconContent = '×'
     clickable = true
   } else if (variant === 'additional') {
-    if (name === 'buyGasFee' || name === 'sellGasFee') {
+    if (['buyGasFee', 'sellGasFee'].includes(name || '')) {
       iconContent = '×'
       clickable = true
     } else {
       iconContent = '%'
-      clickable = false
     }
   }
 
-  const handleClear = () => {
-    onChange({ target: { value: '' } })
+  const getDefaultValue = () => {
+    if (variant === 'quick') return '0.00'
+    if (
+      variant === 'additional' &&
+      ['buyGasFee', 'sellGasFee', 'buySlippage', 'sellSlippage'].includes(name || '')
+    )
+      return '0.0'
+    return ''
   }
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement> | { target: { value: string } }
-  ) => {
-    onChange(e)
+  const handleClear = () => {
+    const defVal = getDefaultValue()
+    setLocalValue(defVal)
+    onChange({ target: { value: defVal } })
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let inputValue = e.target.value.replace(/[^0-9.]/g, '')
+
+    const parts = inputValue.split('.')
+    if (parts.length > 2) {
+      inputValue = parts[0] + '.' + parts.slice(1).join('')
+    }
+
+    if (/^0{2,}/.test(inputValue)) {
+      inputValue = '0.'
+    } else if (/^0\d+/.test(inputValue)) {
+      inputValue = inputValue.replace(/^0(\d)/, '0.$1')
+    }
+
+    setLocalValue(inputValue)
+  }
+
+  const handleBlur = () => {
+    if (localValue.trim() === '') {
+      const defVal = getDefaultValue()
+      setLocalValue(defVal)
+      onChange({ target: { value: defVal } })
+    } else {
+      onChange({ target: { value: localValue } })
+    }
   }
 
   return (
     <InputContainer>
-      <StyledInput name={name} value={value} onChange={handleChange} />
+      <StyledInput
+        name={name}
+        value={localValue}
+        onChange={handleChange}
+        onBlur={handleBlur}
+      />
       {showIcon && iconContent && (
         clickable ? (
           <ClearButton onClick={handleClear}>{iconContent}</ClearButton>
