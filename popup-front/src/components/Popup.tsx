@@ -64,29 +64,23 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }, [activeTab, settings])
 
   const handleQuickInputChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | { target: { name?: string; value: string } }
+    e: { target: { name?: string; value: string } }
   ): void => {
-    if (typeof e.target.name === 'string') {
-      const fieldName: string = e.target.name
+    if (e.target.name) {
       setFormData((prev) => ({
         ...prev,
-        [fieldName]: e.target.value
+        [e.target.name!]: e.target.value
       }))
     }
   }
 
   const handleAdditionalInputChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | { target: { name?: string; value: string } }
+    e: { target: { name?: string; value: string } }
   ): void => {
-    if (typeof e.target.name === 'string') {
-      const fieldName: string = e.target.name
+    if (e.target.name) {
       setFormData((prev) => ({
         ...prev,
-        [fieldName]: e.target.value
+        [e.target.name!]: e.target.value
       }))
     }
   }
@@ -146,7 +140,7 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           handleTabChange={handleTabChange}
           loading={loading}
         />
-        
+
         {loading ? (
           <LoadingContent />
         ) : (

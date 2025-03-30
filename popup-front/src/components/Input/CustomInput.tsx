@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import { formatInputValue, getDefaultInputValue } from './inputHelpers'
 
 const InputContainer = styled.div`
   position: relative;
   width: 100%;
 `
 
-export const StyledInput = styled.input`
+const StyledInput = styled.input`
   width: 100%;
   padding: 4px 8px;
   background: #1b1b1b;
@@ -40,77 +41,61 @@ const Indicator = styled.span`
 interface CustomInputProps {
   variant?: 'preset' | 'additional' | 'quick'
   value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement> | { target: { value: string } }) => void
+  onChange: (e: { target: { name?: string; value: string } }) => void
   name?: string
 }
 
-const CustomInput: React.FC<CustomInputProps> = ({ variant, value, onChange, name }) => {
+const CustomInput: React.FC<CustomInputProps> = ({
+  variant,
+  value,
+  onChange,
+  name,
+}) => {
   const [localValue, setLocalValue] = useState(value)
 
   useEffect(() => {
     setLocalValue(value)
   }, [value])
 
-  const showIcon = variant === 'preset' ? localValue !== '' : variant ? true : false
+  const showIcon = variant === 'preset' ? localValue !== '' : !!variant
 
-  let iconContent: string | null = null
-  let clickable = false
-
-  if (variant === 'quick') {
-    iconContent = '$'
-  } else if (variant === 'preset') {
-    iconContent = '×'
-    clickable = true
-  } else if (variant === 'additional') {
-    if (['buyGasFee', 'sellGasFee'].includes(name || '')) {
-      iconContent = '×'
-      clickable = true
-    } else {
-      iconContent = '%'
+  const getIconContent = (): string | null => {
+    if (variant === 'quick') return '$'
+    if (variant === 'preset') return '×'
+    if (variant === 'additional') {
+      return ['buyGasFee', 'sellGasFee'].includes(name || '')
+        ? '×'
+        : '%'
     }
+    return null
   }
 
-  const getDefaultValue = () => {
-    if (variant === 'quick') return '0.00'
-    if (
-      variant === 'additional' &&
-      ['buyGasFee', 'sellGasFee', 'buySlippage', 'sellSlippage'].includes(name || '')
-    )
-      return '0.0'
-    return ''
+  const iconContent = getIconContent()
+  const clickable =
+    variant === 'preset' ||
+    (variant === 'additional' &&
+      ['buyGasFee', 'sellGasFee'].includes(name || ''))
+
+  const updateValue = (val: string) => {
+    setLocalValue(val)
+    onChange({ target: { name, value: val } })
   }
 
   const handleClear = () => {
-    const defVal = getDefaultValue()
-    setLocalValue(defVal)
-    onChange({ target: { value: defVal } })
+    const defVal = getDefaultInputValue(variant, name)
+    updateValue(defVal)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let inputValue = e.target.value.replace(/[^0-9.]/g, '')
-
-    const parts = inputValue.split('.')
-    if (parts.length > 2) {
-      inputValue = parts[0] + '.' + parts.slice(1).join('')
-    }
-
-    if (/^0{2,}/.test(inputValue)) {
-      inputValue = '0.'
-    } else if (/^0\d+/.test(inputValue)) {
-      inputValue = inputValue.replace(/^0(\d)/, '0.$1')
-    }
-
-    setLocalValue(inputValue)
+    const input = e.target.value
+    const formatted = formatInputValue(input)
+    setLocalValue(formatted)
   }
 
   const handleBlur = () => {
-    if (localValue.trim() === '') {
-      const defVal = getDefaultValue()
-      setLocalValue(defVal)
-      onChange({ target: { value: defVal } })
-    } else {
-      onChange({ target: { value: localValue } })
-    }
+    if (localValue.trim() === '')
+      updateValue(getDefaultInputValue(variant, name))
+    else updateValue(localValue)
   }
 
   return (
@@ -123,7 +108,9 @@ const CustomInput: React.FC<CustomInputProps> = ({ variant, value, onChange, nam
       />
       {showIcon && iconContent && (
         clickable ? (
-          <ClearButton onClick={handleClear}>{iconContent}</ClearButton>
+          <ClearButton onClick={handleClear}>
+            {iconContent}
+          </ClearButton>
         ) : (
           <Indicator>{iconContent}</Indicator>
         )
