@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Setting } from '../types/settings'
 
-const API_URL = 'http://localhost:5000/api'
+const API_URL = import.meta.env.VITE_API_URL
 
 export const getSettings = async (): Promise<Setting[]> => {
   const response = await axios.get(`${API_URL}/settings`)
