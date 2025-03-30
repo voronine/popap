@@ -31,7 +31,7 @@ const TabButton = styled.button.withConfig({
   color: ${(props) => (props.active ? '#3875b6' : '#808288')};
   cursor: pointer;
   &:disabled {
-    background: #555;
+    background: #222222;
   }
   &:hover {
     background: ${(props) => (props.active ? '#2a3b68' : '#444')};

@@ -31,6 +31,11 @@ interface PopupHeaderTabsProps {
 
 const CloseIconWrapper = styled.div`
   cursor: pointer;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: #ffffff;
+  }
 `
 
 export const PopupHeaderTabs: React.FC<PopupHeaderTabsProps> = ({
