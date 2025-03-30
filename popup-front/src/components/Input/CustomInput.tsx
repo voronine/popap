@@ -32,7 +32,7 @@ const ClearButton = styled.button`
 const Indicator = styled.span`
   position: absolute;
   top: 50%;
-  right: -14px;
+  right: -12px;
   transform: translateY(-50%);
   color: #484848;
   font-size: 8px;
@@ -61,7 +61,9 @@ const CustomInput: React.FC<CustomInputProps> = ({
 
   const getIconContent = (): string | null => {
     if (variant === 'quick') return '$'
-    if (variant === 'preset') return '×'
+    if (variant === 'preset') {
+      return name === 'sellPresets' ? '%' : '×'
+    }
     if (variant === 'additional') {
       return ['buyGasFee', 'sellGasFee'].includes(name || '')
         ? '×'
@@ -71,8 +73,9 @@ const CustomInput: React.FC<CustomInputProps> = ({
   }
 
   const iconContent = getIconContent()
+
   const clickable =
-    variant === 'preset' ||
+    (variant === 'preset' && name !== 'sellPresets') ||
     (variant === 'additional' &&
       ['buyGasFee', 'sellGasFee'].includes(name || ''))
 
@@ -82,6 +85,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
   }
 
   const handleClear = () => {
+    if (!clickable) return
     const defVal = getDefaultInputValue(variant, name)
     updateValue(defVal)
   }
@@ -93,6 +97,10 @@ const CustomInput: React.FC<CustomInputProps> = ({
   }
 
   const handleBlur = () => {
+    if (!clickable) {
+      updateValue(localValue)
+      return
+    }
     if (localValue.trim() === '')
       updateValue(getDefaultInputValue(variant, name))
     else updateValue(localValue)

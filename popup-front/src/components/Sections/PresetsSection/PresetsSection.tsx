@@ -48,40 +48,39 @@ export interface PresetsSectionProps {
   ) => void
 }
 
-const PresetsSection: React.FC<PresetsSectionProps> = React.memo(({
-  presetsConfig,
-  formData,
-  handlePresetInputChange
-}) => {
-  return (
-    <>
-      {presetsConfig.map(({ key, label, Icon, iconProps }) => (
-        <Section key={key}>
-          <TitleContainer>
-            <Icon {...iconProps} />
-            <Label>{label}</Label>
-          </TitleContainer>
-          <PresetsGrid>
-            {formData[key]?.map((val: string, i: number) => (
-              <PresetInputWrapper key={`${key}-${i}`}>
-                <CustomInput
-                  variant="preset"
-                  value={val}
-                  onChange={(e) =>
-                    handlePresetInputChange(
-                      e as React.ChangeEvent<HTMLInputElement>,
-                      i,
-                      key as 'buyPresets' | 'sellPresets'
-                    )
-                  }
-                />
-              </PresetInputWrapper>
-            ))}
-          </PresetsGrid>
-        </Section>
-      ))}
-    </>
-  )
-})
+const PresetsSection: React.FC<PresetsSectionProps> = React.memo(
+  ({ presetsConfig, formData, handlePresetInputChange }) => {
+    return (
+      <>
+        {presetsConfig.map(({ key, label, Icon, iconProps }) => (
+          <Section key={key}>
+            <TitleContainer>
+              <Icon {...iconProps} />
+              <Label>{label}</Label>
+            </TitleContainer>
+            <PresetsGrid>
+              {formData[key]?.map((val: string, i: number) => (
+                <PresetInputWrapper key={`${key}-${i}`}>
+                  <CustomInput
+                    variant="preset"
+                    value={val}
+                    name={key}
+                    onChange={(e) =>
+                      handlePresetInputChange(
+                        e as React.ChangeEvent<HTMLInputElement>,
+                        i,
+                        key
+                      )
+                    }
+                  />
+                </PresetInputWrapper>
+              ))}
+            </PresetsGrid>
+          </Section>
+        ))}
+      </>
+    )
+  }
+)
 
 export default PresetsSection
