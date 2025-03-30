@@ -35,6 +35,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   font-family: 'Segoe UI', Arial, sans-serif;
+
+  @media (max-width: 420px) {
+    width: 320px;
+    padding: 4px 6px;
+  }
 `
 
 const Content = styled.div`
