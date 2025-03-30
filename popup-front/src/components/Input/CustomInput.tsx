@@ -97,6 +97,24 @@ const CustomInput: React.FC<CustomInputProps> = ({
   }
 
   const handleBlur = () => {
+    if (variant === 'quick' && localValue.trim() !== '') {
+      const num = parseFloat(localValue)
+      if (!isNaN(num)) {
+        updateValue(num.toFixed(2))
+        return
+      }
+    }
+    if (
+      variant === 'additional' &&
+      (name === 'buySlippage' || name === 'sellSlippage') &&
+      localValue.trim() !== ''
+    ) {
+      const num = parseFloat(localValue)
+      if (!isNaN(num)) {
+        updateValue(num.toFixed(1))
+        return
+      }
+    }
     if (!clickable) {
       updateValue(localValue)
       return
