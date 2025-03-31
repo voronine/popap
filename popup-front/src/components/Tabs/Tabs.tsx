@@ -20,7 +20,7 @@ const TabsContainer = styled.div`
 
 const TabButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'active'
-})<{ active: boolean }>`
+})<{ active: boolean; disabled: boolean }>`
   flex: 1;
   text-align: center;
   font-size: 8px;
@@ -29,9 +29,11 @@ const TabButton = styled.button.withConfig({
   border-radius: 4px;
   background: ${(props) => (props.active ? '#293a4f' : '#222222')};
   color: ${(props) => (props.active ? '#3875b6' : '#808288')};
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   &:disabled {
     background: #222222;
+    pointer-events: none;
+    cursor: not-allowed;
   }
   &:hover {
     background: ${(props) => (props.active ? '#2a3b68' : '#444')};
@@ -49,7 +51,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onTabChange, disabled }) =
   return (
     <TabsWrapper>
       <TabsContainer>
-        {tabs.map(tab => (
+        {tabs.map((tab) => (
           <TabButton
             key={tab}
             active={activeTab === tab}
